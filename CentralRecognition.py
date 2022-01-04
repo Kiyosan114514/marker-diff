@@ -34,6 +34,9 @@ class CentralRecognition() :
     #グレースケール化
     def __frames2gray_img(self) :
         self.img = np.array([cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) for frame in self.frames])
+        self.img_size = self.img.shape[1:]
+        self.center = (int(self.img_size[1]/2), int(self.img_size[0]/2))
+        self.output = np.zeros((self.img.shape[1], self.img.shape[2]), dtype=np.uint8)
 
     #差分の抽出
     def different(self):
@@ -110,7 +113,6 @@ class CentralRecognition() :
         # 最大値を取得(探査用)
         self.output[self.output.max() > self.output] = 0
         self.output[self.output.max() <= self.output] = 255
-        #aaaaaaaa
 
         # 判別分析法(Debug用)
         #ret, self.output = cv2.threshold(self.output, 0, 255, cv2.THRESH_OTSU)
