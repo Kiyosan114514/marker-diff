@@ -37,6 +37,7 @@ class CentralRecognition() :
         self.img_size = self.img.shape[1:]
         self.center = (int(self.img_size[1]/2), int(self.img_size[0]/2))
         self.output = np.zeros((self.img.shape[1], self.img.shape[2]), dtype=np.uint8)
+        #aaaaaaaaaaaa
 
     #差分の抽出
     def different(self):
