@@ -55,13 +55,17 @@ class CentralRecognition() :
         self.diff = self.diff.astype(np.uint8)
         cv2.imwrite(os.path.join(self.__DIF_DIR, self.VIDEO_NAME + self.__IMG_EXT), self.diff) 
 
-        #差分を二値化
-        ret, self.diff = cv2.threshold(self.diff, 0, 255, cv2.THRESH_OTSU)
-
         #カメラの枠外を除去
         self.mask = np.zeros((self.img.shape[1], self.img.shape[2]), dtype=np.uint8)
         cv2.circle(self.mask, center=(self.img.shape[2] // 2, self.img.shape[1] // 2), radius=self.img.shape[1]//2, color=255, thickness=-1)
         self.diff[self.mask == 0] = 0
+
+        #カメラの枠内の差分の生じている部分に対して判別分析法
+        self.diff_mask = self.diff[self.diff > 0]
+        ret, self.diff_mask = cv2.threshold(self.diff_mask, 0, 255, cv2.THRESH_OTSU)
+        self.diff_mask = self.diff_mask.transpose(1,0)
+        self.diff_mask = np.max(self.diff_mask, axis=0).astype(np.uint8)
+        self.diff[self.diff > 0] = self.diff_mask
 
         cv2.imwrite(os.path.join(self.__DIFF_DIR, self.VIDEO_NAME + self.__IMG_EXT), self.diff)
 
